@@ -17,7 +17,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Section;
@@ -62,9 +62,27 @@ class PostResource extends Resource
                             ->label('Category'),
                         ColorPicker::make('color')
                             ->label('Color'),
-                        MarkdownEditor::make('content')
+                        RichEditor::make('content')
                             ->label('Content')
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->toolbarButtons([
+                                'blockquote',
+                                'bold',
+                                'bulletList',
+                                'codeBlock',
+                                'h1',
+                                'h2',
+                                'h3',
+                                'h4',
+                                'h5',
+                                'italic',
+                                'link',
+                                'orderedList',
+                                'redo',
+                                'strike',
+                                'underline',
+                                'undo',
+                            ]),
                         TagsInput::make('tags')
                             ->columnSpanFull()
                             ->label('Tags')
@@ -95,25 +113,29 @@ class PostResource extends Resource
                 TextColumn::make('title')
                     ->label('Title')
                     ->searchable()
+                    ->toggleable()
                     ->sortable(),
                 TextColumn::make('slug')
                     ->label('Slug')
                     ->searchable()
+                    ->toggleable()
                     ->sortable(),
                 TextColumn::make('category.name')
                     ->label('Category')
-                    ->searchable()
+                    ->toggleable()
                     ->sortable(),
                 ColorColumn::make('color')
-                    ->label('Color')
-                    ->sortable(),
+                    ->toggleable()
+                    ->label('Color'),
                 ImageColumn::make('thumbnail')
+                    ->toggleable()
                     ->label('Thumbnail'),
                 TextColumn::make('tags')
                     ->label('Tags')
-                    ->searchable()
+                    ->toggleable()
                     ->sortable(),
                 CheckboxColumn::make('is_published')
+                    ->toggleable()
                     ->label('Is Published')
                     ->sortable(),
 
@@ -123,6 +145,8 @@ class PostResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
+                // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
